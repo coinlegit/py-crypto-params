@@ -1,6 +1,6 @@
+# -*- coding: utf-8 -*-
 import cryptoparams
 import logging
-import six
 from unittest import TestCase
 
 

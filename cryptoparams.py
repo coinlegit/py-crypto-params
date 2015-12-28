@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import binascii
 import Crypto.Cipher
 import Crypto.Hash.MD5
