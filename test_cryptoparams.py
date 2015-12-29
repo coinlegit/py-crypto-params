@@ -2,7 +2,6 @@
 import cryptoparams
 import json
 import logging
-import six
 from unittest import TestCase
 
 
