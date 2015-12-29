@@ -184,6 +184,34 @@ class CryptoParams(object):
         except TypeError as e:
             six.reraise(ValueError, e)
 
+    def encrypt(self, value):
+        """
+            Encrypt a string using AES algorithm (CFB mode) and encode the result in Base64 to handle it easily
+
+            :param str value: String to encrypt
+            :return: Base64 String that represent the binary data encrypted with AES algorithm
+            :rtype: str
+        """
+        if not isinstance(value, six.string_types):
+            six.reraise(ValueError, "Value should be a string")
+        if self._aes is None:
+            six.reraise(RuntimeError, "AES algorithm is not initialized. This should never happen!")
+        return binascii.b2a_base64(self._aes.encrypt(self._pad_string(value))).rstrip()
+
+    def decrypt(self, value):
+        """
+            Decrypt a Base64 string using AES algorithm (CFB mode)
+
+            :param str value: Base64 String to decrypt
+            :return: String that represent the decrypted data with AES algorithm
+            :rtype: str
+        """
+        if not isinstance(value, six.string_types):
+            six.reraise(ValueError, "Value should be a string")
+        if self._aes is None:
+            six.reraise(RuntimeError, "AES algorithm is not initialized. This should never happen!")
+        return self._unpad_string(self._aes.decrypt(binascii.a2b_base64(value).rstrip()))
+
     def __init__(self, key=None, iv=None):
         """
             Initialize this class
