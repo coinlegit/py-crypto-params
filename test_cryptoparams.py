@@ -105,6 +105,12 @@ class TestCryptoParams(TestCase):
         except ValueError:
             pass
 
+        try:
+            cp.iv = "a1e1eb2a20241234a1e1eb2a2024z234"
+            self.fail("Wrong initalization vector accepted")
+        except ValueError:
+            pass
+
     def test_wrong_parameters(self):
         cp = cryptoparams.CryptoParams()
         self.assertRaises(ValueError, cp.encrypt, dict())
