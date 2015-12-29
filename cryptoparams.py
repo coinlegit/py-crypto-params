@@ -88,6 +88,12 @@ class CryptoParams(object):
         return Crypto.Random.get_random_bytes(self._BLOCK_SIZE_)
 
     def _initialize_aes(self):
+        """
+            Initialize `PyCrypto <https://www.dlitz.net/software/pycrypto/>`_ AES Algorithm
+            :return: PyCrypto AES instance initialized with key and initialization vector provided on setup
+            :rtype: Crypto.Cipher.AES
+            :raises ValueError: if Key or Initialization Vector are not provided
+        """
         if self._key is None:
             six.reraise(ValueError, "AES Key not set.")
         if self._iv is None:
