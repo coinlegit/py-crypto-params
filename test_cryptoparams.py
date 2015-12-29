@@ -66,3 +66,23 @@ class TestCryptoParams(TestCase):
         decrypted_string = cp.decrypt(encrypted_string)
         decrypted_data = json.loads(decrypted_string)
         self.assertEqual(decrypted_data, original_data)
+
+    def test_properties(self):
+        cp = cryptoparams.CryptoParams()
+        cp.key = "d0540d01397444a5f368185bfcb5b66b"
+        cp.iv = "a1e1eb2a20241234a1e1eb2a20241234"
+
+        self.assertEqual(cp.key, "d0540d01397444a5f368185bfcb5b66b")
+        self.assertEqual(cp.iv, "a1e1eb2a20241234a1e1eb2a20241234")
+
+        try:
+            cp.key = "aieie"
+            self.fail("Wrong key accepted")
+        except ValueError:
+            pass
+
+        try:
+            cp.iv = "aieie"
+            self.fail("Wrong initalization vector accepted")
+        except ValueError:
+            pass
