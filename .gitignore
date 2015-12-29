@@ -2,3 +2,4 @@
 *.pyc
 py_crypto_params.egg-info
 .tox
+docs/dist
