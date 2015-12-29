@@ -94,6 +94,12 @@ class TestCryptoParams(TestCase):
             pass
 
         try:
+            cp.key = "d0540d01397444a5f368185bfzb5b66b"
+            self.fail("Wrong key accepted")
+        except ValueError:
+            pass
+
+        try:
             cp.iv = tuple()
             self.fail("Wrong initalization vector accepted")
         except ValueError:
