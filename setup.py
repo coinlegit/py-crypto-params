@@ -14,7 +14,7 @@ setup(
         keywords="crypto-js crypto aes parameters encryption",
         url="https://github.com/torre76/py-crypto-params",
         download_url="https://github.com/torre76/py-crypto-params/tarball/1.0.0",
-        packages=find_packages(exclude=["test_cryptoparams", "docs"]),
+        py_modules = ["cryptoparams"],
         long_description=long_description,
         package_data={
             '': ['README.rst'],
