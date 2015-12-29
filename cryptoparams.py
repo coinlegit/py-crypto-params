@@ -58,6 +58,38 @@ class CryptoParams(object):
     def iv(self, value):
         self._iv = self._validate_iv(value)
 
+    def _pad_string(self, value):
+        """
+            Pad a string according to `PKCS#7 <http://www.ietf.org/rfc/rfc2315.txt>`_.
+
+            :param str value: Value that need to be padded
+            :return: padded string
+            :rtype: str
+            :raises ValueError: if parameter is incorrect
+        """
+        if not isinstance(value, six.string_types):
+            six.reraise(ValueError, "Value should be a string")
+        value_len = len(value)
+        pad_size = self._BLOCK_SIZE_ - (value_len % self._BLOCK_SIZE_)
+        return value.ljust(value_len + pad_size, chr(pad_size))
+
+    def _unpad_string(self, value):
+        """
+            Unpad a string according to `PKCS#7 <http://www.ietf.org/rfc/rfc2315.txt>`_.
+
+            :param str value: Value that need to be unpadded
+            :return: unpadded string
+            :rtype: str
+            :raises ValueError: if parameter is incorrect
+        """
+        if not isinstance(value, six.string_types):
+            six.reraise(ValueError, "Value should be a string")
+        value_len = len(value)
+        pad_size = ord(value[-1])
+        if pad_size > self._BLOCK_SIZE_:
+            six.reraise(ValueError, "Input is not padded or padding is corrupt")
+        return value[:value_len - pad_size]
+
     def _generate_key(self):
         """
             Generate a random AES key using a secure randomizer algorithm
