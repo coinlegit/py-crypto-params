@@ -18,14 +18,14 @@ class TestCryptoParams(TestCase):
         cp = cryptoparams.CryptoParams()
         self.assertIsNotNone(cp)
 
-        cp = cryptoparams.CryptoParams("abcderfhoricsfd83ghxaqwdfhvx-213")
-        self.assertEqual("abcderfhoricsfd83ghxaqwdfhvx-213", cp.key)
+        cp = cryptoparams.CryptoParams("d0540d01397444a5f368185bfcb5b66b")
+        self.assertEqual("d0540d01397444a5f368185bfcb5b66b", cp.key)
 
-        cp = cryptoparams.CryptoParams("abcderfhoricsfd83ghxaqwdfhvx-213", "a1e1eb2a20241234")
-        self.assertEqual("abcderfhoricsfd83ghxaqwdfhvx-213", cp.key)
+        cp = cryptoparams.CryptoParams("d0540d01397444a5f368185bfcb5b66b", "a1e1eb2a20241234")
+        self.assertEqual("d0540d01397444a5f368185bfcb5b66b", cp.key)
         self.assertEqual("a1e1eb2a20241234", cp.iv)
 
-        self.assertRaises(ValueError, cryptoparams.CryptoParams, "abcderfhoricsfd83ghxaqwdfhvx-213", "aieiebrazorf")
+        self.assertRaises(ValueError, cryptoparams.CryptoParams, "d0540d01397444a5f368185bfcb5b66b", "aieiebrazorf")
 
         self.assertRaises(ValueError, cryptoparams.CryptoParams, "1-213", "a1e1eb2a20241234")
 

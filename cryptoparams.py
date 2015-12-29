@@ -37,7 +37,7 @@ class CryptoParams(object):
             :rtype: str
             :raises ValueError: if invalid key is provided
         """
-        return self._key
+        return binascii.b2a_hex(self._key)
 
     @key.setter
     def key(self, value):
@@ -104,7 +104,7 @@ class CryptoParams(object):
             randomic_sequence += base_dict[randomizer.randrange(0, len(base_dict) - 1)]
 
         md5 = Crypto.Hash.MD5.new(randomic_sequence)
-        return md5.hexdigest()
+        return binascii.a2b_hex(md5.hexdigest())
 
     def _generate_iv(self):
         """
@@ -137,7 +137,10 @@ class CryptoParams(object):
             six.reraise(ValueError, "Key must be a string")
         if len(key) != 32:
             six.reraise(ValueError, "Key must be 32 bytes")
-        return key
+        try:
+            return binascii.a2b_hex(key)
+        except TypeError as e:
+            six.reraise(ValueError, e)
 
     def _validate_iv(self, iv):
         """
