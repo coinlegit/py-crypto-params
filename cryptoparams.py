@@ -42,6 +42,8 @@ class CryptoParams(object):
     @key.setter
     def key(self, value):
         self._key = self._validate_key(value)
+        if self._key is not None and self._iv is not None:
+            self._aes = self._initialize_aes()
 
     @property
     def iv(self):
@@ -57,6 +59,40 @@ class CryptoParams(object):
     @iv.setter
     def iv(self, value):
         self._iv = self._validate_iv(value)
+        if self._key is not None and self._iv is not None:
+            self._aes = self._initialize_aes()
+
+    def _generate_key(self):
+        """
+            Generate a random AES key using a secure randomizer algorithm
+
+            :return: Random bytes used as AES Key (32 bytes)
+            :rtype: str
+        """
+        randomic_sequence = ""
+        base_dict = string.printable
+        randomizer = Crypto.Random.random.StrongRandom()
+        for i in range(0, self._BLOCK_SIZE_):
+            randomic_sequence += base_dict[randomizer.randrange(0, len(base_dict) - 1)]
+
+        md5 = Crypto.Hash.MD5.new(randomic_sequence)
+        return binascii.a2b_hex(md5.hexdigest())
+
+    def _generate_iv(self):
+        """
+            Generate a random initialization vector using a secure randomizer algorithm
+
+            :return: Random bytes used as initialization vector (16 bytes)
+            :rtype: binary
+        """
+        return Crypto.Random.get_random_bytes(self._BLOCK_SIZE_)
+
+    def _initialize_aes(self):
+        if self._key is None:
+            six.reraise(ValueError, "AES Key not set.")
+        if self._iv is None:
+            six.reraise(ValueError, "AES Initialization Vector not set.")
+        return Crypto.Cipher.AES.new(self._key, Crypto.Cipher.AES.MODE_CFB, self._iv, segment_size=128)
 
     def _pad_string(self, value):
         """
@@ -89,31 +125,6 @@ class CryptoParams(object):
         if pad_size > self._BLOCK_SIZE_:
             six.reraise(ValueError, "Input is not padded or padding is corrupt")
         return value[:value_len - pad_size]
-
-    def _generate_key(self):
-        """
-            Generate a random AES key using a secure randomizer algorithm
-
-            :return: Random bytes used as AES Key (32 bytes)
-            :rtype: str
-        """
-        randomic_sequence = ""
-        base_dict = string.printable
-        randomizer = Crypto.Random.random.StrongRandom()
-        for i in range(0, self._BLOCK_SIZE_):
-            randomic_sequence += base_dict[randomizer.randrange(0, len(base_dict) - 1)]
-
-        md5 = Crypto.Hash.MD5.new(randomic_sequence)
-        return binascii.a2b_hex(md5.hexdigest())
-
-    def _generate_iv(self):
-        """
-            Generate a random initialization vector using a secure randomizer algorithm
-
-            :return: Random bytes used as initialization vector (16 bytes)
-            :rtype: binary
-        """
-        return Crypto.Random.get_random_bytes(self._BLOCK_SIZE_)
 
     @staticmethod
     def _validate_key(key):
@@ -160,8 +171,8 @@ class CryptoParams(object):
         """
         if not isinstance(iv, six.string_types):
             six.reraise(ValueError, "Initialization vector must be a string")
-        if len(iv) != self._BLOCK_SIZE_:
-            six.reraise(ValueError, "Initialization vector must be {bytes} bytes".format(bytes=self._BLOCK_SIZE_))
+        if len(iv) != self._BLOCK_SIZE_ * 2:
+            six.reraise(ValueError, "Initialization vector must be {bytes} bytes".format(bytes=self._BLOCK_SIZE_ * 2))
         try:
             return binascii.a2b_hex(iv)
         except TypeError as e:
@@ -174,6 +185,7 @@ class CryptoParams(object):
         self._logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self._key = self._validate_key(key) if key is not None else self._generate_key()
         self._iv = self._validate_iv(iv) if iv is not None else self._generate_iv()
+        self._aes = self._initialize_aes()
 
         self._logger.debug("CryptoParams initialization complete. AES Key: [{key}]. "
                            "Initialization vector: [{iv}].".format(key=self.key, iv=self.iv))
