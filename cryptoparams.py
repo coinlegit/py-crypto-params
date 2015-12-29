@@ -19,12 +19,12 @@ import string
 class CryptoParams(object):
     """
         Provide encryption and decryption function for strings that use AES symmetric algorithm with CBC
-            (which is compatible with `crypto-js <https://code.google.com/p/crypto-js/>`_).
+        (which is compatible with `crypto-js <https://code.google.com/p/crypto-js/>`_).
 
-        Padding implemented as per `RFC 2315 <http://www.ietf.org/rfc/rfc2315.txt>`: PKCS#7 page 21
+        Padding implemented as per `RFC 2315 <http://www.ietf.org/rfc/rfc2315.txt>`_ PKCS#7 page 21
 
         First base implementation for this class is taken from
-            `marcoslin gist <https://gist.github.com/marcoslin/8026990>`_.
+        `marcoslin gist <https://gist.github.com/marcoslin/8026990>`_.
 
         :param str key: 32 bytes key used to initialize AES algorithm
         :param str iv: 16 bytes hexadecimal initialization vector used to initialize AES algorithm
