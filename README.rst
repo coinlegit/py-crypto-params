@@ -5,7 +5,14 @@ Utility function to encrypt - decrypt string using AES symmetric algorithm that 
 `crypto-js <https://code.google.com/p/crypto-js/>`_. 
 
 
-|build-status| |coverage| |license|
+|build-status| |coverage| |docs| |license|
+
+
+Documentation and Installation instructions
+-------------------------------------------
+
+Documentation and installation instructions can be found at 
+`Read The Docs <http://py-crypto-params.readthedocs.org/>`_.
 
 .. |build-status| image:: https://travis-ci.org/torre76/py-crypto-params.svg?branch=master
     :target: https://travis-ci.org/torre76/py-crypto-params
@@ -18,3 +25,7 @@ Utility function to encrypt - decrypt string using AES symmetric algorithm that 
 .. |license| image:: https://img.shields.io/badge/license-LGPLv3-blue.svg
     :target: https://github.com/torre76/py-crypto-params/blob/master/LICENSE.txt
     :alt: License 
+    
+.. |docs| image:: https://readthedocs.org/projects/py-crypto-params/badge/?version=latest
+:target: http://py-crypto-params.readthedocs.org/en/latest/?badge=latest
+:alt: Documentation Status    
