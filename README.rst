@@ -27,5 +27,5 @@ Documentation and installation instructions can be found at
     :alt: License 
     
 .. |docs| image:: https://readthedocs.org/projects/py-crypto-params/badge/?version=latest
-:target: http://py-crypto-params.readthedocs.org/en/latest/?badge=latest
-:alt: Documentation Status    
+    :target: http://py-crypto-params.readthedocs.org/en/latest/?badge=latest
+    :alt: Documentation Status    
