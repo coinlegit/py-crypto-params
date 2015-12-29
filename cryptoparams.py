@@ -45,13 +45,14 @@ class CryptoParams(object):
             :rtype: str
             :raises ValueError: if invalid key is provided
         """
-        return binascii.b2a_hex(self._key)
+        if six.PY2:
+            return binascii.b2a_hex(self._key)
+        else:
+            return binascii.b2a_hex(self._key).decode('ascii')
 
     @key.setter
     def key(self, value):
         self._key = self._validate_key(value)
-        if self._key is not None and self._iv is not None:
-            self._aes = self._initialize_aes()
 
     @property
     def iv(self):
@@ -62,13 +63,14 @@ class CryptoParams(object):
             :rtype: str
             :raises ValueError: if invalid key is provided
         """
-        return binascii.b2a_hex(self._iv)
+        if six.PY2:
+            return binascii.b2a_hex(self._iv)
+        else:
+            return binascii.b2a_hex(self._iv).decode('ascii')
 
     @iv.setter
     def iv(self, value):
         self._iv = self._validate_iv(value)
-        if self._key is not None and self._iv is not None:
-            self._aes = self._initialize_aes()
 
     def _generate_key(self):
         """
@@ -83,6 +85,8 @@ class CryptoParams(object):
         for i in range(0, self._BLOCK_SIZE_):
             randomic_sequence += base_dict[randomizer.randrange(0, len(base_dict) - 1)]
 
+        if six.PY3:
+            randomic_sequence = randomic_sequence.encode('utf-8')
         md5 = Crypto.Hash.MD5.new(randomic_sequence)
         return binascii.a2b_hex(md5.hexdigest())
 
@@ -103,9 +107,9 @@ class CryptoParams(object):
             :raises ValueError: if Key or Initialization Vector are not provided
         """
         if self._key is None:
-            six.reraise(ValueError, "AES Key not set.")
+            raise ValueError("AES Key not set.")
         if self._iv is None:
-            six.reraise(ValueError, "AES Initialization Vector not set.")
+            raise ValueError("AES Initialization Vector not set.")
         return Crypto.Cipher.AES.new(self._key, Crypto.Cipher.AES.MODE_CFB, self._iv, segment_size=128)
 
     def _pad_string(self, value):
@@ -118,7 +122,7 @@ class CryptoParams(object):
             :raises ValueError: if parameter is incorrect
         """
         if not isinstance(value, six.string_types):
-            six.reraise(ValueError, "Value should be a string")
+            raise ValueError("Value should be a string")
         value_len = len(value)
         pad_size = self._BLOCK_SIZE_ - (value_len % self._BLOCK_SIZE_)
         return value.ljust(value_len + pad_size, chr(pad_size))
@@ -133,11 +137,11 @@ class CryptoParams(object):
             :raises ValueError: if parameter is incorrect
         """
         if not isinstance(value, six.string_types):
-            six.reraise(ValueError, "Value should be a string")
+            raise ValueError("Value should be a string")
         value_len = len(value)
         pad_size = ord(value[-1])
         if pad_size > self._BLOCK_SIZE_:
-            six.reraise(ValueError, "Input is not padded or padding is corrupt")
+            raise ValueError("Input is not padded or padding is corrupt")
         return value[:value_len - pad_size]
 
     @staticmethod
@@ -159,9 +163,9 @@ class CryptoParams(object):
             :raises ValueError: it the key is unacceptable
         """
         if not isinstance(key, six.string_types):
-            six.reraise(ValueError, "Key must be a string")
+            raise ValueError("Key must be a string")
         if len(key) != 32:
-            six.reraise(ValueError, "Key must be 32 bytes")
+            raise ValueError("Key must be 32 bytes")
         try:
             return binascii.a2b_hex(key)
         except TypeError as e:
@@ -184,9 +188,9 @@ class CryptoParams(object):
             :raises ValueError: it the initialization vector is unacceptable
         """
         if not isinstance(iv, six.string_types):
-            six.reraise(ValueError, "Initialization vector must be a string")
+            raise ValueError("Initialization vector must be a string")
         if len(iv) != self._BLOCK_SIZE_ * 2:
-            six.reraise(ValueError, "Initialization vector must be {bytes} bytes".format(bytes=self._BLOCK_SIZE_ * 2))
+            raise ValueError("Initialization vector must be {bytes} bytes".format(bytes=self._BLOCK_SIZE_ * 2))
         try:
             return binascii.a2b_hex(iv)
         except TypeError as e:
@@ -201,10 +205,12 @@ class CryptoParams(object):
             :rtype: str
         """
         if not isinstance(value, six.string_types):
-            six.reraise(ValueError, "Value should be a string")
-        if self._aes is None:
-            six.reraise(RuntimeError, "AES algorithm is not initialized. This should never happen!")
-        return binascii.b2a_base64(self._aes.encrypt(self._pad_string(value))).rstrip()
+            raise ValueError("Value should be a string")
+        aes = self._initialize_aes()
+        if six.PY2:
+            return binascii.b2a_base64(aes.encrypt(self._pad_string(value))).rstrip()
+        else:
+            return binascii.b2a_base64(aes.encrypt(self._pad_string(value))).rstrip().decode('ascii')
 
     def decrypt(self, value):
         """
@@ -215,10 +221,12 @@ class CryptoParams(object):
             :rtype: str
         """
         if not isinstance(value, six.string_types):
-            six.reraise(ValueError, "Value should be a string")
-        if self._aes is None:
-            six.reraise(RuntimeError, "AES algorithm is not initialized. This should never happen!")
-        return self._unpad_string(self._aes.decrypt(binascii.a2b_base64(value).rstrip()))
+            raise ValueError("Value should be a string")
+        aes = self._initialize_aes()
+        if six.PY2:
+            return self._unpad_string(aes.decrypt(binascii.a2b_base64(value).rstrip()))
+        else:
+            return self._unpad_string(aes.decrypt(binascii.a2b_base64(value).rstrip()).decode('ascii'))
 
     def __init__(self, key=None, iv=None):
         """
@@ -227,7 +235,6 @@ class CryptoParams(object):
         self._logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self._key = self._validate_key(key) if key is not None else self._generate_key()
         self._iv = self._validate_iv(iv) if iv is not None else self._generate_iv()
-        self._aes = self._initialize_aes()
 
         self._logger.debug("CryptoParams initialization complete. AES Key: [{key}]. "
                            "Initialization vector: [{iv}].".format(key=self.key, iv=self.iv))
