@@ -5,7 +5,7 @@ Utility function to encrypt - decrypt string using AES symmetric algorithm that 
 `crypto-js <https://code.google.com/p/crypto-js/>`_. 
 
 
-|build-status| |coverage| |docs| |license|
+|build-status| |coverage| |docs| |license| |pypi|
 
 
 Documentation and Installation instructions
@@ -28,4 +28,8 @@ Documentation and installation instructions can be found at
     
 .. |docs| image:: https://readthedocs.org/projects/py-crypto-params/badge/?version=latest
     :target: http://py-crypto-params.readthedocs.org/en/latest/?badge=latest
-    :alt: Documentation Status    
+    :alt: Documentation Status
+
+.. |pypi| image:: https://img.shields.io/pypi/v/py-crypto-params.svg
+    :target: https://pypi.python.org/pypi/py-crypto-params/
+    :alt: py-crypto-params on Pypi
