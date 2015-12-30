@@ -26,8 +26,8 @@ class CryptoParams(object):
         First base implementation for this class is taken from
         `marcoslin gist <https://gist.github.com/marcoslin/8026990>`_.
 
-        :param str key: 32 bytes key used to initialize AES algorithm
-        :param str iv: 16 bytes hexadecimal initialization vector used to initialize AES algorithm
+        :param str key: 32 bytes hexadecimal key used to initialize AES algorithm
+        :param str iv: 32 bytes hexadecimal initialization vector used to initialize AES algorithm
         :raises ValueError: if parameters are incorrect
     """
 
@@ -41,7 +41,7 @@ class CryptoParams(object):
         """
             AES Key used by the class
 
-            :return: 32 bytes Key used by the class
+            :return: 32 bytes hexadecimal string representing the key used by the class
             :rtype: str
             :raises ValueError: if invalid key is provided
         """
@@ -59,7 +59,7 @@ class CryptoParams(object):
         """
             Initialization vector used by this class
 
-            :return: 16 bytes initialization vector used by the class
+            :return: 32 bytes hexadecimal string containing the initialization vector used by the class
             :rtype: str
             :raises ValueError: if invalid key is provided
         """
@@ -177,13 +177,13 @@ class CryptoParams(object):
 
             Checks performed:
 
-            * *iv* must be a string
-            * *iv* must be 16 bytes
+            * *iv* must be a string expressed in hexadecimal form
+            * *iv* must be 32 bytes
 
             :param str iv: String used as initialization vector
 
-                It has to be exactly **16 bytes**
-            :return: 16 bytes initialization vector used for encryption
+                It has to be exactly **32 bytes** in hexadecimal form
+            :return: 32 bytes hexadecimail string that represents the initialization vector used for encryption
             :rtype: binary
             :raises ValueError: it the initialization vector is unacceptable
         """

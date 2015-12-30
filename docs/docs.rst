@@ -23,7 +23,7 @@ To initialize the encryption - decryption system, the :class:`CryptoParams <cryp
   cp = cryptoparams.CryptoParams()
 
 
-The initialization without parameters auto generate a 32 bytes key and a 16 bytes initialization vector (as per
+The initialization without parameters auto generate a 32 bytes key and a 32 bytes initialization vector (as per
 `AES <https://en.wikipedia.org/wiki/Advanced_Encryption_Standard>`_ specification).
 
 The generated values are available through these properties:
@@ -43,7 +43,7 @@ properties above and using the constructor:
 The requisites to use custom *key* and *initialization vector* are:
 
 - **key** must be a 32 bytes string written in hexadecimal base (it is not meant to be human readable)
-- **initialization vector** must be a 16 bytes string written in hexadecimal base (it is not meant to be human readable)
+- **initialization vector** must be a 32 bytes string written in hexadecimal base (it is not meant to be human readable)
 
 If those requirements are not met a :class:`ValueError` exception will be raised.
 

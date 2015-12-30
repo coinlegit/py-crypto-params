@@ -17,7 +17,7 @@ Another weakness on sites are *Javascript config files* that holds *JSON* with v
 Last but not least, *AJAX call* contains a lot of information and, if unprotected, they can easily looped to obtain
 all their contents.
 
-How to prevent this flaws?
+How to prevent these flaws?
 Maybe if the query string or the data is encrypted a lot of those scripts will not work...
 
 How it works
@@ -25,7 +25,8 @@ How it works
 
 The :class:`CryptoParams <cryptoparams.CryptoParams>` class provide methods to encrypt and decrypt strings using
 `AES <https://en.wikipedia.org/wiki/Advanced_Encryption_Standard>`_ algorithm [#aesalg]_.
-This way query parameters (but also *JSON responses*) can be obfuscated and read only by the possessors of the AES key.
+This way query parameters (but also *JSON responses*) can be obfuscated and read only by the possessors of the
+encryption key.
 
 This particular implementation, inspired by `marcoslin gist <https://gist.github.com/marcoslin/8026990>`_ is
 compatible with `crypto-js <https://code.google.com/p/crypto-js/>`_ [#futurejs]_ ; this mean that a parameter encoded by a
